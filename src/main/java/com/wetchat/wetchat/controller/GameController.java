@@ -1,4 +1,4 @@
-package com.wetchat.wetchat;
+package com.wetchat.wetchat.controller;
 
 import com.wetchat.wetchat.entity.Game;
 import org.springframework.web.bind.annotation.GetMapping;
