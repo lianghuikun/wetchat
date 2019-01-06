@@ -13,7 +13,7 @@ import java.util.List;
 public class GameController {
 
     @GetMapping("/getGameList")
-    private List<Game> getGameList() {
+    public List<Game> getGameList() {
         return Arrays.asList(new Game(1L, "梦幻西游", "网易"));
     }
 }
