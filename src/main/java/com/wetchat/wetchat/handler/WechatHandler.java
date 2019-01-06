@@ -163,20 +163,41 @@ public class WechatHandler {
                 EventMessage eventMessage = JSON.parseObject(json, EventMessage.class);
                 String event = eventMessage.getEvent();
                 if ("subscribe".equals(event)) {
-                    String content = "哇偶，等于等到你，怎么此时才来订阅啊，拉出去打哭...";
-                    // 如果是订阅,可以发送文本 语音 视频等，自己定义
-                    // 如果是订阅发送文字
-                    TextMessage textMessage = new TextMessage();
-                    TextMessage rspMessage = new TextMessage();
-                    rspMessage.setToUserName(eventMessage.getFromUserName());
-                    rspMessage.setFromUserName(eventMessage.getToUserName());
-                    // 当前时间戳
-                    rspMessage.setCreateTime(Instant.now().toEpochMilli());
-                    rspMessage.setMsgType("text");
-                    rspMessage.setContent(content);
-                    String writeXml = MessageUtil.textMessageToXml(rspMessage);
-                    return writeXml;
-                } else {
+                    // 如果是订阅，还有可能是扫描
+                   /* String eventKey = eventMessage.getEventKey();
+                    if (!StringUtils.isEmpty(eventKey)) {
+                        // 如果是扫描
+                        // EventKey	事件KEY值，qrscene_为前缀，后面为二维码的参数值
+                        // 获取去掉前缀 qrscene_的值,获取长净值
+                        String sceneId = eventKey.substring(8, eventKey.length());
+                        // 返回消息，可以给用户提供场景值如果有必要的话
+                        return null;
+                    } else {*/
+                        // 如果仅仅是订阅公众号
+                        String content = "哇偶，等于等到你，怎么此时才来订阅啊，拉出去打哭...";
+                        // 如果是订阅,可以发送文本 语音 视频等，自己定义
+                        // 如果是订阅发送文字
+                        TextMessage textMessage = new TextMessage();
+                        TextMessage rspMessage = new TextMessage();
+                        rspMessage.setToUserName(eventMessage.getFromUserName());
+                        rspMessage.setFromUserName(eventMessage.getToUserName());
+                        // 当前时间戳
+                        rspMessage.setCreateTime(Instant.now().toEpochMilli());
+                        rspMessage.setMsgType("text");
+                        rspMessage.setContent(content);
+                        String writeXml = MessageUtil.textMessageToXml(rspMessage);
+                        return writeXml;
+/*
+                    }
+*/
+
+                }
+             /*   else if ("scan".equals(event))  {
+                    // 如果是扫描，未关注
+                    // 注意场景值所得位置和订阅已关注不一样
+                    return null;
+                } */
+                else if ("unsubscribe".equals(event))  {
                     // 如果是unsubscribe 取消订阅
                     String content = "你取消了啊，我在你后面看着你呢...";
                     // 如果是订阅,可以发送文本 语音 视频等，自己定义
