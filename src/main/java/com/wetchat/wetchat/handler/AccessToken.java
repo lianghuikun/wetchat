@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.time.Instant;
 
 /**
+ *  http://localhost/qrcode/createQrcode?sceneId=123
  * 辅助类 TODO 先把token放在内存，后面应该放在数据库或缓存中
  */
 public class AccessToken implements Serializable {
@@ -74,7 +75,7 @@ public class AccessToken implements Serializable {
         if (!StringUtils.isEmpty(rsp)) {
             JSONObject json = JSONObject.parseObject(rsp);
             String errcode = json.getString("errcode");
-            if (!StringUtils.isEmpty(errcode)) {
+            if (StringUtils.isEmpty(errcode)) {
                 String access_token = json.getString("access_token");
                 Long expires_in = json.getLong("expires_in");
                 // 设置
@@ -99,9 +100,15 @@ public class AccessToken implements Serializable {
      * @throws IOException
      */
     public static String queryToken() throws IOException {
-        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=" + CLIENT_CREDENTIAL + "&appid="
+       /* String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=" + CLIENT_CREDENTIAL + "&appid="
                 + APPID + "&secret=" + APPSECRET;
-        return run(url);
+        return run(url);*/
+
+       String rsp = "{\n" +
+               "    \"access_token\":\"17_fnFd_B7VQnsti3rxxzDGsy5Rb06jm0VttJ6LYWAPlsflOEKpMCDVX-B_nk8TTtw2B8eccVOCHBRJEFPGN7hVBHXiSAX6SFxq3EbK60_-hiaCLVtS_p2zldMW0oAYCBy0jFz1LPp2L4ZHiUoJFSBiAFALYH\",\n" +
+               "    \"expires_in\":7200\n" +
+               "}";
+       return rsp;
     }
 
     /**

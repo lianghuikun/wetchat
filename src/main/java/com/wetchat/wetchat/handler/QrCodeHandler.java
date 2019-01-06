@@ -68,9 +68,11 @@ public class QrCodeHandler {
                 // {"ticket":"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm3sUw==","expire_seconds":60,"url":"http:\/\/weixin.qq.com\/q\/kZgfwMTm72WWPkovabbI"}
                 // {"errcode":40013,"errmsg":"invalid appid"}
                 JSONObject rsp = JSONObject.parseObject(string);
+                logger.info("-----查询ticket------>" + rsp.toJSONString());
                 String errcode = rsp.getString("errcode");
-                if (StringUtils.isEmpty(errcode)) {
+                if (!StringUtils.isEmpty(errcode)) {
                     // 如果出错了
+                    return "查询ticket出错了" + rsp.getString("errmsg");
                 } else {
                     // 拿到票据，根据票据换取二维码图片链接
                     String ticket = rsp.getString("ticket");
@@ -111,6 +113,5 @@ public class QrCodeHandler {
             logger.error("---->查询token异常," + e.getMessage());
             return "-----查询token异常!" + e.getMessage();
         }
-        return "fail";
     }
 }
