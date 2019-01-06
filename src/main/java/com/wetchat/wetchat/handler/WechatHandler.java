@@ -1,6 +1,9 @@
 package com.wetchat.wetchat.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wetchat.wetchat.entity.TextMessage;
+import com.wetchat.wetchat.util.MessageUtil;
 import com.wetchat.wetchat.util.SHA1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 回复消息的流程：
@@ -40,7 +45,6 @@ public class WechatHandler {
                                  String timestamp,
                                  String nonce,
                                  String echostr) {
-
         /**
          *
          * http://localhost/wechatHandler/checkSignature?signature=c01a0c4ff9682c2a4586819dece7474189c1877b&timestamp=1546696329&nonce=535158386&echostr=123
@@ -76,8 +80,39 @@ public class WechatHandler {
 //        return signature.equals(realSignature);
     }
 
+    /**
+     * 回复微信消息，切记微信是POST请求
+     * @param request
+     * @param response
+     * @return
+     */
     @PostMapping
     public String receive(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, String> pool = MessageUtil.parseXml(request);
+            String json = JSON.toJSONString(pool);
+            TextMessage textMessage = JSON.parseObject(json, TextMessage.class);
+            String msgType = textMessage.getMsgType();
+            if (msgType.equals("text")) {
+                // 如果是文本消息
+                String content = textMessage.getContent();
+                // 将文本消息原样返回做为回复
+                TextMessage rspMessage = new TextMessage();
+                // 交换接收和发送双方的身份
+                rspMessage.setToUserName(textMessage.getFromUserName());
+                rspMessage.setFromUserName(textMessage.getToUserName());
+                // 当前时间戳
+                rspMessage.setCreateTime(Instant.now().toEpochMilli());
+                rspMessage.setMsgType("text");
+                rspMessage.setContent(content);
+                // msgId不需要设置
+//                rspMessage.setMsgId();
+                String writeXml = MessageUtil.textMessageToXml(rspMessage);
+                return writeXml;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

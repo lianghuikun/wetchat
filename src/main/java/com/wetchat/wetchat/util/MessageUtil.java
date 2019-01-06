@@ -33,6 +33,9 @@ public class MessageUtil {
                 "</xml>";
         Map<String, String> pool = parseXml(str);
         System.out.println("-------->: " + JSON.toJSONString(pool));
+        String json = JSON.toJSONString(pool);
+        TextMessage temp = JSON.parseObject(json, TextMessage.class);
+        System.out.println("---->" + JSON.toJSONString(temp));
 
         TextMessage textMessage = new TextMessage();
         textMessage.setToUserName("coco");

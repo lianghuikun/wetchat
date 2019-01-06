@@ -15,6 +15,8 @@ public class TextMessage {
     private long CreateTime;
     // 消息类型（text/image/location/link）
     private String MsgType;
+    //文本内容
+    private String Content;
     // 消息id，64位整型
     private long MsgId;
 }
